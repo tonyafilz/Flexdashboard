@@ -3,7 +3,7 @@ title: "Precipitation Rates Across the US"
 output: 
   flexdashboard::flex_dashboard:
     source_code: embed
-    social: [ "twitter", "facebook", "menu"]
+    social: [ "twitter", "facebook", "linkedin", "menu"]
     orientation: columns
     vertical_layout: fill
 ---
@@ -96,14 +96,6 @@ plot_ly(shared_precip2, x= ~precip_zip2$names, y= ~precip_zip2$x)
 
 ##Column {data-width=600 .tabset}
 
-###Rainfall by Latitude
-
-```{r}
-ggplot(data = precip_zip2, mapping = aes(x = precip_zip2$latitude, y = precip_zip2$x)) +
-  geom_point() +
-  geom_smooth()
-```
-
 ###Rainfall by Longitude
 
 ```{r}
@@ -112,3 +104,10 @@ ggplot(data = precip_zip2, mapping = aes(x = precip_zip2$longitude, y = precip_z
   geom_smooth()
 ```
 
+###Rainfall by Latitude
+
+```{r}
+ggplot(data = precip_zip2, mapping = aes(x = precip_zip2$latitude, y = precip_zip2$x)) +
+  geom_point() +
+  geom_smooth()
+```
