@@ -19,6 +19,7 @@ library(dplyr)
 library(crosstalk)
 library(DT)
 library(plotly)
+library(ggplot2)
 ```
 
 ```{r, include=FALSE}
@@ -52,8 +53,12 @@ precip_zip2 <- subset(precip_zip, !duplicated(precip_zip$names))
 shared_precip2 <-SharedData$new(precip_zip2)
 ```
 
+#Intro Text {.sidebar}
+This dashboard displays precipitation rates across the US. This flexdashboard utilizes leaflet, plotly, and cross talk to create an interactive user experience.
 
-Column {data-width=650}
+#Dashboard
+
+##Column {data-width=600}
 -----------------------------------------------------------------------
 
 ### Map
@@ -61,6 +66,7 @@ Column {data-width=650}
 ```{r}
 # Map
   leaflet(shared_precip2) %>% 
+  setView(lng = -100, lat = 40, zoom = 3) %>% 
   addTiles() %>%
   addCircles(lng = precip_zip2$longitude, 
              lat = precip_zip2$latitude, 
@@ -70,7 +76,7 @@ Column {data-width=650}
 
 ```
 
-Column {data-width=350}
+Column {data-width=400}
 -----------------------------------------------------------------------
 
 ### Data Table
@@ -79,9 +85,21 @@ Column {data-width=350}
   datatable(shared_precip2, extensions = "Scroller", style="bootstrap", class="compact", width="100%", options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
 ```
 
+###Plotly
+```{r}
+plot_ly(shared_precip2, x= ~precip_zip2$names, y= ~precip_zip2$x)
+```
 
-### Plot of Rainfall by City
+
+#Interaction Plot
+
+##Column {data-width=600}
+
+###ggplot
 
 ```{r}
-plot_ly(shared_precip2, x = ~names, y = ~x)
+ggplot(data = precip_zip2, mapping = aes(x = precip_zip2$latitude, y = precip_zip2$x)) +
+  geom_point() +
+  geom_smooth()
 ```
+
