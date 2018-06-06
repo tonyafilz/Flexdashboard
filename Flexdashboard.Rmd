@@ -7,7 +7,7 @@ output:
     orientation: columns
     vertical_layout: fill
 ---
-
+ 
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(datasets)
