@@ -1,0 +1,12 @@
+name: us_precipitation_flexdashboard
+title: US Precipitation Flexdashboard
+username: tonya
+account: tonya
+server: colorado.rstudio.com
+hostUrl: http://colorado.rstudio.com:3939/__api__
+appId: 1174
+bundleId: 8767
+url: http://colorado.rstudio.com:3939/content/1174/
+when: 1528215098.12099
+asMultiple: FALSE
+asStatic: FALSE
