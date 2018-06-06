@@ -19,6 +19,7 @@ library(dplyr)
 library(crosstalk)
 library(DT)
 library(plotly)
+library(ggplot2)
 ```
 
 ```{r, include=FALSE}
@@ -42,18 +43,23 @@ zipcode2 <- zipcode %>%
 
 precip_zip <- inner_join(precip_tidy, zipcode2, by = c("names" = "city"))
 
-##Getting rid of small cities.
+##Getting rid of small duplicate cities.
 precip_zip <- precip_zip[-c(44, 45, 52, 53, 134:137, 265:267, 447:453, 529:530, 567:582, 610:631, 918:947, 1002:1012, 1113:1120, 1234:1242, 1453:1459, 1583, 1624:1628, 1695:1700, 1767:1786, 1902, 1959:1964, 2017:2025, 2041:2054, 2089:2104, 2186:2202, 2208:2209, 2260:2263, 2289, 2294:2313, 2364, 2416:2439, 2484:2500, 2671, 2751:2756, 2802:2804, 2879:2893, 2941:2976, 3026:3038, 3120:3139, 3203, 3291:3294, 3297:3303, 3317:3328, 3364:3384, 3406:3407, 3479:3486, 3532:3546, 3674:3676, 3834:3841, 4097:4099, 4105:4129, 4155:4161, 4218:4239, 4269:4316, 4336:4341, 4390), ]
 
 ## Consolidating into 1 zipcode per unique city
 
 precip_zip2 <- subset(precip_zip, !duplicated(precip_zip$names))
 
+##Creating shared data for crosstalk interactivity
 shared_precip2 <-SharedData$new(precip_zip2)
 ```
 
+#Intro Text {.sidebar}
+This dashboard displays precipitation rates across the US. This flexdashboard utilizes leaflet, plotly, and cross talk to create an interactive user experience.
 
-Column {data-width=650}
+#Dashboard
+
+##Column {data-width=600}
 -----------------------------------------------------------------------
 
 ### Map
@@ -61,6 +67,7 @@ Column {data-width=650}
 ```{r}
 # Map
   leaflet(shared_precip2) %>% 
+  setView(lng = -100, lat = 40, zoom = 3) %>% 
   addTiles() %>%
   addCircles(lng = precip_zip2$longitude, 
              lat = precip_zip2$latitude, 
@@ -70,7 +77,7 @@ Column {data-width=650}
 
 ```
 
-Column {data-width=350}
+Column {data-width=400}
 -----------------------------------------------------------------------
 
 ### Data Table
@@ -79,9 +86,29 @@ Column {data-width=350}
   datatable(shared_precip2, extensions = "Scroller", style="bootstrap", class="compact", width="100%", options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
 ```
 
+###Plotly
+```{r}
+plot_ly(shared_precip2, x= ~precip_zip2$names, y= ~precip_zip2$x)
+```
 
-### Plot of Rainfall by City
+
+#Interaction Plot
+
+##Column {data-width=600 .tabset}
+
+###Rainfall by Latitude
 
 ```{r}
-plot_ly(shared_precip2, x = ~names, y = ~x)
+ggplot(data = precip_zip2, mapping = aes(x = precip_zip2$latitude, y = precip_zip2$x)) +
+  geom_point() +
+  geom_smooth()
 ```
+
+###Rainfall by Longitude
+
+```{r}
+ggplot(data = precip_zip2, mapping = aes(x = precip_zip2$longitude, y = precip_zip2$x)) +
+  geom_point() +
+  geom_smooth()
+```
+
